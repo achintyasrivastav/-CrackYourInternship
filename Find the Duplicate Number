@@ -1,0 +1,30 @@
+class Solution {
+public:
+    int findDuplicate(vector<int>& nums) {
+
+        int n = nums.size();
+
+        int value = 0;
+        for(int i=0; i<n; ){
+            if(nums[i]==i){
+                i++;
+            }
+            else if(nums[i]==n){
+                if(nums[0]==n) return n;
+                else swap(nums[0],nums[i]);
+            }
+            else{
+                int curr_value = nums[i];
+                int curr_ind_value = nums[curr_value];
+
+                if(curr_ind_value == curr_value) return curr_ind_value;
+
+                nums[curr_value] = nums[i];
+                nums[i] = curr_ind_value;
+
+            }
+        }
+        
+        return 0;
+    }
+};
