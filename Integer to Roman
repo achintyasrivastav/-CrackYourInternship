@@ -1,0 +1,47 @@
+class Solution {
+public:
+    string intToRoman(int num) {
+        unordered_map<int,string> mp;
+
+        mp[1] = "I";
+        mp[5] = "V";
+        mp[10] = "X";
+        mp[50] = "L";
+        mp[100] = "C";
+        mp[500] = "D";
+        mp[1000] = "M";
+
+        int plv = 1;
+        string ans = "";
+
+        while(num > 0){
+            int value = num%10;
+            num = num/10;
+
+            if(value==4 || value==9){
+                string temp = mp[plv] + mp[(value*plv)+plv];
+                ans = temp + ans;
+            }
+            else if(value==2 || value==6){
+                string temp = mp[(value*plv)-plv] + mp[plv];
+                ans = temp + ans;
+            }
+            else if(value==3 || value==7){
+                string temp = mp[(value*plv)-(2*plv)] + mp[plv] + mp[plv];
+                ans = temp + ans;
+            }
+            else if(value==8){
+                string temp = mp[(value*plv)-(3*plv)] + mp[plv] + mp[plv] + mp[plv];
+                ans = temp + ans;
+            }
+            else{
+                string temp = mp[value*plv];
+                ans = temp + ans;
+            }
+
+            plv = plv*10;
+        }
+
+        return ans;
+    }
+};
