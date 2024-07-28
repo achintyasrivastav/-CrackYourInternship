@@ -1,0 +1,27 @@
+/*The Node structure is
+struct Node {
+int data;
+Node * right, * left;
+};*/
+
+/*You are required to complete below method */
+class Solution{
+  public:
+    bool solve(Node* root, int mini, int maxi){
+        if(!root) return false;
+        if(!root->left && !root->right){
+            if(mini==maxi) return true;
+            else return false;
+        }        
+        
+        bool left = solve(root->left, mini, root->data-1);
+        bool right = solve(root->right, root->data+1, maxi);
+        
+        if(left || right) return true;
+        else return false;
+    }
+    
+    bool isDeadEnd(Node *root){
+        return solve(root, 1, INT_MAX);
+    }
+};
