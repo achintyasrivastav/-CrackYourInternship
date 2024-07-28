@@ -1,0 +1,27 @@
+class Solution {
+public:
+    int characterReplacement(string s, int k) {
+
+        int n = s.length();
+        if(k==n || k==n-1) return n;
+
+        int start=0, end=0, maxi=0, result=0;
+        vector<int> count(26,0);
+
+        for(end=0; end<n; end++){
+            count[s[end]-'A']++;
+            maxi = max(maxi, count[s[end]-'A']);
+
+            if((end-start+1)-maxi > k){
+                count[s[start]-'A']--;
+                start++;
+            }
+            else{
+                result = max(result, (end-start+1));
+            }
+        }
+
+        return result;
+        
+    }
+};
