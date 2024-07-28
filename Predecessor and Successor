@@ -1,0 +1,45 @@
+/*BST Node
+struct Node
+{
+	int key;
+	struct Node *left;
+	struct Node *right;
+	
+	Node(int x){
+	    key = x;
+	    left = NULL;
+	    right = NULL;
+	}
+};
+*/
+
+// This function finds predecessor and successor of key in BST.
+// It sets pre and suc as predecessor and successor respectively
+class Solution
+{
+    public:
+    
+    void inorder(Node* root, vector<int> &arr){
+        if(!root) return;
+        
+        inorder(root->left, arr);
+        arr.push_back(root->key);
+        inorder(root->right, arr);
+    }
+    
+    void findPreSuc(Node* root, Node*& pre, Node*& suc, int key)
+    {
+        vector<int> arr;
+        inorder(root, arr);
+        
+        for(int i=0; i<arr.size(); i++){
+            if(arr[i]<key) pre = new Node(arr[i]);
+            
+            if(arr[i]>key){
+                suc = new Node(arr[i]);
+                break;
+            }
+            
+        }
+    }
+};
