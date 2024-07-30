@@ -1,0 +1,57 @@
+class Solution {
+public:
+    void gameOfLife(vector<vector<int>>& board) {
+
+        vector<pair<int,int>> changedIndexes;
+
+        int m = board.size(), n = board[0].size();
+
+        for(int i=0; i<m; i++){
+
+            for(int j=0; j<n; j++){
+
+                int row = i;
+                int col = j;
+
+                if(board[row][col]==1){
+                    int ocount = 0;
+                    for(int k=-1; k<=1; k++){
+                        for(int l=-1; l<=1; l++){
+                            if(k==0 && l==0) continue;
+
+                            int nrow = row+k;
+                            int ncol = col+l;
+
+                            if(nrow<m && nrow>=0 && ncol<n && ncol>=0 && board[nrow][ncol]==1) ocount++;
+                        }
+                    }
+                    if(ocount > 3 || ocount < 2) changedIndexes.push_back({row,col});
+                }
+                else{
+                    int ocount = 0;
+                    for(int k=-1; k<=1; k++){
+                        for(int l=-1; l<=1; l++){
+                            if(k==0 && l==0) continue;
+
+                            int nrow = row+k;
+                            int ncol = col+l;
+
+                            if(nrow<m && nrow>=0 && ncol<n && ncol>=0 && board[nrow][ncol]==1) ocount++;
+                        }
+                    }
+                    if(ocount==3) changedIndexes.push_back({row,col});
+                }
+
+
+            }
+        }
+
+        for(int i=0; i<changedIndexes.size(); i++){
+            int row = changedIndexes[i].first;
+            int col = changedIndexes[i].second;
+
+            board[row][col]= !board[row][col];
+        }
+        
+    }
+};
