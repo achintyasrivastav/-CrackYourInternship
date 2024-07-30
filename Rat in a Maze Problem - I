@@ -1,0 +1,46 @@
+//User function template for C++
+
+class Solution {
+  public:
+    void dfs(int row, int col, vector<vector<int>> &mat,
+    vector<vector<int>> &visited, string &temp, vector<string> &result){
+        
+        int n = mat.size();
+        //base acse
+        if(row==n-1 && col==n-1){
+            result.push_back(temp);
+            return;
+        }
+        
+        visited[row][col] = 1;
+        
+        int dirR[4] = {-1, 0, 1, 0};
+        int dirC[4] = {0, 1, 0, -1};
+        char dir[4] = {'U', 'R', 'D', 'L'};
+        
+        for(int i=0; i<4; i++){
+            int nrow = row+dirR[i];
+            int ncol = col+dirC[i];
+            char ch = dir[i];
+            
+            if(nrow>=0 && nrow<n && ncol>=0 && ncol<n && mat[nrow][ncol]==1 && visited[nrow][ncol]==0){
+                temp.push_back(ch);
+                dfs(nrow, ncol, mat, visited, temp, result);
+                temp.pop_back();
+            }
+        }
+        
+        visited[row][col] = 0;
+    }
+    vector<string> findPath(vector<vector<int>> &mat) {
+        vector<string> result;
+        
+        if(mat[0][0]==0) return result;
+        
+        int n = mat.size();
+        vector<vector<int>> visited(n, vector<int>(n,0));
+        string temp = "";
+        dfs(0, 0, mat, visited, temp, result);
+        return result;
+    }
+};
