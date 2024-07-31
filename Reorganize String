@@ -1,0 +1,49 @@
+class Solution {
+public:
+    string reorganizeString(string s) {
+
+        int n = s.length();
+        priority_queue<pair<int,char>> pq;
+        unordered_map<char,int> mp;
+
+        for(int i=0; i<n; i++){
+            mp[s[i]]++;
+        }
+
+        for(auto it : mp){
+            pq.push({it.second, it.first});
+        }
+
+        string ans = "";
+
+        while(!pq.empty()){
+            char ch1 = pq.top().second;
+            int count1 = pq.top().first;
+            pq.pop();
+
+            cout<<ch1<<" "<<count1<<endl;
+
+            if(ans.length()==0 || (ans.length()>0 && ans[ans.length()-1]!=ch1)){
+                ans.push_back(ch1);
+                count1--;
+                if(count1>0) pq.push({count1,ch1});
+            }
+            else{
+                if(pq.empty()) return "";
+                else{
+                    char ch2 = pq.top().second;
+                    int count2 = pq.top().first;
+                    pq.pop();
+
+                    pq.push({count1, ch1});
+
+                    ans.push_back(ch2);
+                    count2--;
+                    if(count2 > 0) pq.push({count2,ch2});
+                }
+            }
+        }
+        
+        return ans;
+    }
+};
