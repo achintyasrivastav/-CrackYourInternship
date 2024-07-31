@@ -1,0 +1,38 @@
+class Solution {
+public:
+    int numOfMinutes(int n, int headID, vector<int>& manager, vector<int>& informTime) {
+
+        vector<int> adj[n];
+        for(int i=0; i<n; i++){
+            int u = manager[i];
+            int v = i;
+
+            if(u==-1) continue;
+
+            adj[u].push_back(v);
+        }
+
+        queue<pair<int,int>> q;
+        q.push({headID, 0});
+        int ans = 0;
+
+        while(!q.empty()){
+            int employee = q.front().first;
+            int time = q.front().second;
+            q.pop();
+
+            ans = max(ans, time);
+
+            if(informTime[employee]==0) continue;
+
+            for(auto it : adj[employee]){
+                int subordinate = it;
+                int currtime = time + informTime[employee];
+
+                q.push({subordinate, currtime});
+            }
+        }
+        
+        return ans;
+    }
+};
