@@ -42,3 +42,40 @@ public:
         return solve(size-1, countO, countZ, n, m, dp);
     }
 };
+
+//tabulation in 3d 
+int findMaxForm(vector<string>& strs, int m, int n) {
+    int size = strs.size();
+    vector<int> countZ(size), countO(size);
+
+    // Calculate counts of 0's and 1's for each string
+    for(int i = 0; i < size; i++){
+        int zcount = 0, ocount = 0;
+        for(char ch : strs[i]){
+            if(ch == '0') zcount++;
+            else ocount++;
+        }
+        countZ[i] = zcount;
+        countO[i] = ocount;
+    }
+
+    // 3D DP array initialized to 0
+    vector<vector<vector<int>>> dp(size + 1, vector<vector<int>>(m + 1, vector<int>(n + 1, 0)));
+
+    // Fill the DP array
+    for(int i = 1; i <= size; i++){
+        int zeros = countZ[i - 1];
+        int ones = countO[i - 1];
+        for(int j = 0; j <= m; j++){
+            for(int k = 0; k <= n; k++){
+                dp[i][j][k] = dp[i - 1][j][k]; // Not taking the i-th element
+                if(j >= zeros && k >= ones){
+                    dp[i][j][k] = max(dp[i][j][k], 1 + dp[i - 1][j - zeros][k - ones]); // Taking the i-th element
+                }
+            }
+        }
+    }
+
+    return dp[size][m][n];
+}
+//2d still remaining
