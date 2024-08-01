@@ -1,0 +1,44 @@
+class Solution {
+public:
+    int solve(int index, vector<int> &arr1, vector<int> &arr0, int n, int m, vector<vector<vector<int>>> &dp){
+        //base acse
+        if(index==0){
+            if(n-arr1[index]>=0 && m-arr0[index]>=0) return 1;
+            return 0;
+        }
+
+        if(dp[index][n][m]!=-1) return dp[index][n][m];
+
+        //not picking up
+        int ntake = solve(index-1, arr1, arr0, n, m, dp);
+
+        //picking it up
+        int take = 0;
+        if(n-arr1[index]>=0 && m-arr0[index]>=0){
+            take = 1 + solve(index-1, arr1, arr0, n-arr1[index], m-arr0[index], dp);
+        }
+
+        return dp[index][n][m] = max(take,ntake);
+    }
+    int findMaxForm(vector<string>& strs, int m, int n) {
+
+        int size = strs.size();
+
+        vector<int> countZ(size), countO(size);
+
+        for(int i=0; i<size; i++){
+            int zcount = 0, ocount = 0;
+
+            for(int j=0; j<strs[i].length(); j++){
+                if(strs[i][j]=='0') zcount++;
+                else ocount++;
+            }
+
+            countZ[i] = zcount;
+            countO[i] = ocount;
+        }
+
+        vector<vector<vector<int>>> dp(size+1, vector<vector<int>>(n+1, vector<int>(m+1,0)));
+        return solve(size-1, countO, countZ, n, m, dp);
+    }
+};
