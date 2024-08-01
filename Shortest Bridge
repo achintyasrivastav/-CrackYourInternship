@@ -1,0 +1,80 @@
+class Solution {
+public:
+    void dfs(int row, int col, vector<vector<int>>& grid){
+        grid[row][col] = 2;
+
+        int n = grid.size(), m = grid[0].size();
+
+        int dR[4] = {-1, 0, 1, 0};
+        int dC[4] = {0, 1, 0, -1};
+
+        for(int i=0; i<4; i++){
+            int nrow = row+dR[i];
+            int ncol = col+dC[i];
+
+            if(nrow<n && nrow>=0 && ncol<m && ncol>=0 && grid[nrow][ncol]==1){
+                dfs(nrow, ncol, grid);
+            }
+        }
+    }
+    int shortestBridge(vector<vector<int>>& grid) {
+
+        //go and mark the one section of one as 2;
+        int n = grid.size(), m = grid[0].size();
+
+        for(int i=0; i<n; i++){
+            
+            bool flag = false;
+            for(int j=0; j<m; j++){
+
+                if(grid[i][j]==1){
+                    dfs(i,j,grid);
+                    flag = true;
+                    break;
+                }
+            }
+            
+            if(flag==true) break;
+        }
+
+        //find the distance betweem the 1's corrdinate till it find 2
+
+        queue<pair<int,pair<int,int>>> q;
+        vector<vector<int>> visited(n, vector<int>(m,0));
+        for(int i=0; i<n; i++){
+            for(int j=0; j<m; j++){
+
+                if(grid[i][j]==1){
+                    q.push({0,{i,j}});
+                    visited[i][j] = 1;
+                }
+            }
+        }
+        
+        while(!q.empty()){
+            int dist = q.front().first;
+            int row = q.front().second.first;
+            int col = q.front().second.second;
+            q.pop();
+
+            if(grid[row][col]==2) return dist-1;
+
+            int dR[4] = {-1, 0, 1, 0};
+            int dC[4] = {0, 1, 0, -1};
+
+            for(int i=0; i<4; i++){
+                int nrow = row+dR[i];
+                int ncol = col+dC[i];
+
+                if(nrow<n && nrow>=0 && ncol<m && ncol>=0 &&
+                 (grid[nrow][ncol]==0 || grid[nrow][ncol]==2) && visited[nrow][ncol]==0){
+                    q.push({dist+1,{nrow,ncol}});
+                    visited[nrow][ncol] = 1;
+                }
+            }
+
+        }
+        
+        return 0;       
+    }
+};
