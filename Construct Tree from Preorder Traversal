@@ -1,0 +1,30 @@
+/*Structure of the Node of the binary tree is as
+struct Node
+{
+	int data;
+	struct Node *left;
+	struct Node *right;
+};
+*/
+// function should return the root of the new binary tree formed
+struct Node* solve(int &index, int n, int pre[], char preLN[]){
+    
+    if(index >= n) return NULL;
+    
+    Node* root = new Node(pre[index]);
+    
+    if(preLN[index]=='L') return root;
+    else{
+        index++;
+        root->left = solve(index, n, pre, preLN);
+        index++;
+        root->right = solve(index, n, pre, preLN);
+    }
+    
+    return root;
+}
+struct Node* constructTree(int n, int pre[], char preLN[]){
+    int index = 0;
+    Node* root = solve(index, n, pre, preLN);
+    return root;
+}
