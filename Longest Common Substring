@@ -1,0 +1,26 @@
+class Solution{
+    public:
+    
+    int longestCommonSubstr (string S1, string S2, int n, int m)
+    {
+        //vector<vector<int>> dp(n+1, vector<int> (m+1,0));
+        vector<int> dp(m+1,0);
+        int maxi = 0;
+        
+        for(int i=1; i<=n; i++){
+            vector<int> temp(m+1,0);
+            for(int j=1; j<=m; j++){
+                
+                //if a match it has a potential to form further substring
+                if(S1[i-1]==S2[j-1]){
+                    temp[j] = 1 + dp[j-1];
+                    maxi = max(maxi, temp[j]);
+                }
+                
+            }
+            dp = temp;
+        }
+        
+        return maxi;
+    }
+};
