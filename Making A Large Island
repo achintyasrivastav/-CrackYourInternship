@@ -1,0 +1,136 @@
+class DisjointSet{
+public:
+    vector<int> rank, size, parent;
+    DisjointSet(int n){
+        rank.resize(n+1, 0);
+        size.resize(n+1, 1);
+        parent.resize(n+1);
+        for(int i=0; i<=n; i++){
+            //considering both 0 based indexing and 1 based indexing 
+            parent[i] = i; 
+        }
+    }
+
+    int findParent(int node){
+        if(parent[node] == node) return node;
+        return parent[node] = findParent(parent[node]);
+    }
+
+    void unionByRank(int u, int v){
+        int ulp_u = findParent(u);
+        int ulp_v = findParent(v);
+
+        if(ulp_u == ulp_v) return;
+
+        if(rank[ulp_u] < rank[ulp_v]){
+            parent[ulp_u] = ulp_v;
+        }
+        else if(rank[ulp_v] < rank[ulp_u]){
+            parent[ulp_v] = ulp_u;
+        }
+        else{
+            parent[ulp_v] = ulp_u;
+            rank[ulp_u]++;
+        }
+    }
+
+    void unionBySize(int u, int v){
+        int ulp_u = findParent(u);
+        int ulp_v = findParent(v);
+
+        if(ulp_u == ulp_v) return;
+
+        if(size[ulp_u] < size[ulp_v]){
+            parent[ulp_u] = ulp_v;
+            size[ulp_v] += size[ulp_u];
+        }
+        else{
+            parent[ulp_v] = ulp_u;
+            size[ulp_u] += size[ulp_v];
+        }
+    }
+
+};
+
+class Solution {
+public:
+    int largestIsland(vector<vector<int>>& grid) {
+
+        int n = grid.size();
+
+        DisjointSet ds(n*n);
+
+        for(int i=0; i<n; i++){
+            for(int j=0; j<n; j++){
+
+                if(grid[i][j]==0) continue;
+
+                //get the number
+                int u = (i*n) + (j+1);
+                //check upar and prev
+
+                if(i-1>=0 && grid[i-1][j]==1){
+                    //iska number
+                    int v = ((i-1)*n) + j+1;
+                    ds.unionBySize(v,u);
+                }
+                if(j-1>=0 && grid[i][j-1]==1){
+                    //iska number
+                    int v = (i*n) + j;
+                    ds.unionBySize(v,u);
+                }
+            }
+        }
+
+        int result = 0;
+
+        for(int i=0; i<n; i++){
+            for(int j=0; j<n; j++){
+
+                if(grid[i][j]==1) continue;
+
+                //check for all four directions
+                //charo dirctions ke parents ko map me daalo and after that maximize the size
+                unordered_map<int,int> mp;
+
+                int delRow[4] = {-1, 0, 1, 0};
+                int delCol[4] = {0, 1, 0, -1};
+
+                for(int k=0; k<4; k++){
+                    //get the all four directions
+                    int row = i+delRow[k];
+                    int col = j+delCol[k];
+
+                    if(row>=0 && row<n && col>=0 && col<n && grid[row][col]==1){
+                        //get the number of this neighbour
+                        //add the ultimate parent of this number
+                        int number = (row*n) + (col+1);
+                        int parent = ds.findParent(number);
+                        int size_of_parent = ds.size[parent];
+                        mp[parent] = size_of_parent;
+                    }
+                }
+
+                int collective_area = 0;
+                for(auto it:mp){
+                    collective_area += it.second;
+                    //cout<<it.first<<":"<<it.second<<" ";
+                }
+
+                if(collective_area > 0) result = max(result, collective_area+1);
+                cout<<endl;
+            }
+        }
+
+        for(int i=0; i<n; i++){
+            for(int j=0; j<n; j++){
+                if(grid[i][j]==0) continue;
+
+                result = max(result, ds.size[ds.findParent((i*n) + (j+1))]);
+            }
+        }
+        
+        if(result==0) return 1;
+        return result;
+    }
+};
