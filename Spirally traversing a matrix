@@ -1,0 +1,64 @@
+class Solution {
+  public:
+    vector<int> spirallyTraverse(vector<vector<int> > &matrix) {
+        vector<int> result;
+        
+        // code here
+        int lrows = matrix.size();
+        int lcols = matrix[0].size();
+        int frows = 0;
+        int fcols = 0;
+        
+        if(lrows==0 && lcols==0) return result;
+        
+        int row = 0;
+        int col = 0;
+        int element_traversed = 0;
+        int total_element = lrows * lcols;
+        
+        
+        while(element_traversed < total_element){
+            
+            //forward
+            for(; col<lcols && element_traversed < total_element; col++){
+                result.push_back(matrix[row][col]);
+                element_traversed++;
+            }
+            frows++;
+            row++;
+            col--;
+            
+            //downward
+            for(;row<lrows && element_traversed < total_element; row++){
+                result.push_back(matrix[row][col]);
+                element_traversed++;
+            }
+            lcols--;
+            col--;
+            row--;
+            
+            //backward
+            for(;col>=fcols && element_traversed < total_element; col--){
+                result.push_back(matrix[row][col]);
+                element_traversed++;
+            }
+            fcols++;
+            row--;
+            col++;
+            
+            //upward
+            for(;row>=frows && element_traversed < total_element; row--){
+                result.push_back(matrix[row][col]);
+                element_traversed++;         
+            }
+            lrows--;
+            row++;
+            col++;
+            
+        }
+        
+        
+        
+        return result;
+    }
+};
