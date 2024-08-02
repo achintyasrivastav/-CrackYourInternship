@@ -1,0 +1,37 @@
+class Solution {
+public:
+
+    int longestCommonSubsequence(string text1, string text2) {
+        int n = text1.length(), m =text2.length();
+
+        vector<int> dp(m+1,0);
+        for(int index1=1; index1<=n; index1++){
+            vector<int> temp(m+1, 0);
+            for(int index2=1; index2<=m; index2++){
+
+                //match
+                if(text1[index1-1]==text2[index2-1]){
+                    temp[index2] = 1 + dp[index2 - 1];
+                }
+                else {
+                    //no matcha
+                    temp[index2] = max(dp[index2], temp[index2 - 1]);
+                }
+            }
+            dp = temp;
+        }
+
+        return dp[m];
+    }
+
+    int minInsertions(string s) {
+        string t = s;
+        reverse(t.begin(), t.end());
+
+        int common_element_len = longestCommonSubsequence(s,t);
+
+        int total_len = s.length();
+
+        return total_len - common_element_len;
+    }
+};
