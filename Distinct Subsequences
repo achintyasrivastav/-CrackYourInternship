@@ -1,0 +1,181 @@
+//One way
+class Solution {
+public:
+
+    int solve(int index, string &s, string &t, string temp, vector<vector<int>> &dp){
+        //base case
+        if(temp.length()==t.length()){
+            if(temp==t){
+                return 1;
+            }
+            return 0;
+        }
+        if(index==s.length()){
+            return 0;
+        }
+
+        if(t.substr(0, temp.length())!=temp) return 0;
+
+        if(dp[index][temp.length()]!=-1) return dp[index][temp.length()];
+
+        int ntake = solve(index+1, s, t, temp, dp);
+
+        temp.push_back(s[index]);
+        int take = solve(index+1, s, t, temp, dp);
+        temp.pop_back();
+
+        return dp[index][temp.length()] = ntake + take;
+    }
+
+    int numDistinct(string s, string t) {
+
+        if(s.length()<t.length()) return 0;
+
+       vector<vector<int>> dp(s.length(), vector<int>(t.length(),-1));
+       return solve(0, s, t, "", dp);
+    }
+};
+.
+.
+.
+//second way
+class Solution {
+public:
+
+    int solve(int index, string &s, string &t, string temp, vector<vector<int>> &dp){
+        //base case
+        if(temp.length()==t.length()){
+            if(temp==t){
+                return 1;
+            }
+            return 0;
+        }
+        if(index==s.length()){
+            return 0;
+        }
+
+        if(t.substr(0, temp.length())!=temp) return 0;
+
+        if(dp[index][temp.length()]!=-1) return dp[index][temp.length()];
+
+        int ntake = solve(index+1, s, t, temp, dp);
+
+        temp.push_back(s[index]);
+        int take = solve(index+1, s, t, temp, dp);
+        temp.pop_back();
+
+        return dp[index][temp.length()] = ntake + take;
+    }
+
+    int numDistinct(string s, string t) {
+
+        if(s.length()<t.length()) return 0;
+
+       vector<vector<int>> dp(s.length(), vector<int>(t.length(),-1));
+       return solve(0, s, t, "", dp);
+    }
+};
+.
+.
+.
+//third way
+class Solution {
+public:
+
+    int solve(int index1, int index2, string &s, string &t, vector<vector<int>> &dp){
+        //base case
+        if(index2==t.length()) return 1;
+        if(index1==s.length() && index2<t.length()) return 0;
+
+        if(dp[index1][index2]!=-1) return dp[index1][index2];
+
+        int ntake = solve(index1+1, index2, s, t, dp);
+
+        int take = 0;
+        if(s[index1]==t[index2]){
+            take = solve(index1+1, index2+1, s, t, dp);
+        }
+
+        return dp[index1][index2] = ntake+take;
+    }
+
+    int numDistinct(string s, string t) {
+
+        if(s.length()<t.length()) return 0;
+
+        vector<vector<double>> dp(s.length()+1, vector<double>(t.length()+1,0));
+       //return solve(0, 0, s, t, dp);
+
+        for(int i=0; i<=s.length(); i++){
+           dp[i][t.length()] = 1;
+        }
+
+        for(int index1=s.length()-1; index1>=0; index1--){
+           
+            for(int index2=t.length()-1; index2>=0; index2--){
+
+                dp[index1][index2] = dp[index1 + 1][index2];
+
+                if(s[index1]==t[index2]){
+                   dp[index1][index2] += dp[index1 + 1][index2 + 1];
+                }
+            }
+        }
+
+       return (int)dp[0][0];
+    }
+};
+.
+.
+.
+//fourth way
+class Solution {
+public:
+
+    int solve(int index1, int index2, string &s, string &t, vector<vector<int>> &dp){
+        //base case
+        if(index2==t.length()) return 1;
+        if(index1==s.length() && index2<t.length()) return 0;
+
+        if(dp[index1][index2]!=-1) return dp[index1][index2];
+
+        int ntake = solve(index1+1, index2, s, t, dp);
+
+        int take = 0;
+        if(s[index1]==t[index2]){
+            take = solve(index1+1, index2+1, s, t, dp);
+        }
+
+        return dp[index1][index2] = ntake+take;
+    }
+
+    int numDistinct(string s, string t) {
+
+        if(s.length()<t.length()) return 0;
+
+        //vector<vector<double>> dp(s.length()+1, vector<double>(t.length()+1,0));
+       //return solve(0, 0, s, t, dp);
+
+        vector<double> dp(t.length()+1,0);
+        dp[t.length()] = 1;
+
+        for(int index1=s.length()-1; index1>=0; index1--){
+
+            vector<double> next(t.length()+1,0);
+            next[t.length()] = 1;
+           
+            for(int index2=t.length()-1; index2>=0; index2--){
+
+                next[index2] = dp[index2]; 
+
+                if (s[index1] == t[index2]) {
+                    next[index2] += dp[index2 + 1]; 
+                }
+            }
+
+            dp = next;
+        }
+
+       return (int)dp[0];
+    }
+};
