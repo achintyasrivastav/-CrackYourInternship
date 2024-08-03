@@ -1,0 +1,82 @@
+// User function template for C++
+
+class Solution {
+  public:
+    // Function to find if there is a celebrity in the party or not.
+    int celebrity(vector<vector<int> >& mat) {
+        // code here
+        
+        if(mat.size()==1) return 0;
+        
+        unordered_map<int,int> mp;
+        
+        for(int i=0; i<mat.size(); i++){
+            
+            for(int j=0; j<mat[0].size(); j++){
+                
+                if(mat[i][j]==1){
+                    if(mp.find(i)!=mp.end()) mp.erase(i);
+                    mp[j]++;
+                }
+            }
+        }
+        
+        for(auto it : mp){
+            //check for its column
+            bool flag = true;
+            for(int i=0; i<mat[0].size(); i++){
+                if(mat[it.first][i]==0) continue;
+                flag = false;
+                break;
+            }
+            //check for the row
+            if(flag){
+                for(int i=0; i<mat.size(); i++){
+                    if(mat[i][it.first]==1) continue;
+                    if(i==it.first) continue;
+                    flag = false;
+                    break;
+                }
+                
+                if(flag) return it.first;
+            }
+        }
+        
+        return -1;
+    }
+};
+
+//Optimal
+// User function template for C++
+
+class Solution {
+  public:
+    // Function to find if there is a celebrity in the party or not.
+    int celebrity(vector<vector<int> >& mat) {
+        // code here
+        int top = 0, bottom = mat.size()-1;
+        
+        while(top<bottom){
+            if(mat[top][bottom]==1){
+                top++;
+            }
+            else if(mat[bottom][top]==1){
+                bottom--;
+            }
+            else{
+                top++;
+                bottom--;
+            }
+        }
+        
+        if(top>bottom) return -1;
+        
+        for(int i=0; i<mat.size(); i++){
+            if(i==top) continue;
+            if(mat[top][i]==1) return -1;
+            if(mat[i][top]==0) return -1;
+        }
+        
+        return top;
+    }
+};
