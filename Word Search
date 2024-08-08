@@ -1,0 +1,49 @@
+class Solution {
+public:
+    bool dfs(int row, int col, vector<vector<char>>& board, string word, vector<vector<int>>& vis){
+
+        if(word.empty()){
+            return true;
+        }
+
+        vis[row][col] = 1;
+
+        int dR[4] = {-1, 0, 1, 0};
+        int dC[4] = {0, 1, 0, -1};
+
+        for(int k=0; k<4; k++){
+            int nrow = row + dR[k];
+            int ncol = col + dC[k];
+
+            int n = board.size();
+            int m = board[0].size();
+
+            if(nrow>=0 && ncol>=0 && nrow<n && ncol<m && board[nrow][ncol]==word[0] && vis[nrow][ncol]==0){
+                if(dfs(nrow, ncol, board, word.substr(1), vis)) return true;
+            }
+        }
+
+        vis[row][col] = 0;
+
+        return false;
+    }
+    bool exist(vector<vector<char>>& board, string word) {
+        int n = board.size();
+        int m = board[0].size();
+
+
+        for(int i=0; i<n; i++){
+
+            for(int j=0; j<m; j++){
+
+                if(board[i][j]==word[0]){
+                    vector<vector<int>> visited(n, vector<int>(m,0));
+                    if(dfs(i, j, board, word.substr(1), visited)) return true;
+                }
+            }
+        }
+
+        
+        return false;
+    }
+};
