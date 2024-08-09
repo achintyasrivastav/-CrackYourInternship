@@ -1,0 +1,47 @@
+class Solution {
+public:
+    bool solve(int i, int j, string s){
+
+        while(i<j){
+            if(s[i]==s[j]){
+                i++;
+                j--;
+            }
+            else return true;
+        }
+
+        return false;
+    }
+
+    bool validPalindrome(string s) {
+        
+        int i=0, j=s.length()-1;
+
+        while(i<j){
+
+            if(s[i]==s[j]){
+                i++;
+                j--;
+            }
+            else{
+
+                if(i==j-1) return true;
+                else if(i<j-1 && s[i]==s[j-1] || (j>i+1 && s[i+1]==s[j])){
+                    
+                    //check 
+                    if(solve(i, j-1, s)==false) return true;
+                    else if(j>i+1 && s[i+1]==s[j]){
+                        if(solve(i+1, j, s)==false) return true;
+                        else return false;
+                    }
+                    else return false;
+                }
+                else return false;
+
+            }
+
+        }
+
+        return true;
+    }
+};
