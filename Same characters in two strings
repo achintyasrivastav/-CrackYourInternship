@@ -1,0 +1,38 @@
+
+class Solution{
+    public:
+    bool equal(char a, char b){
+        
+        if(a>='a' && a<='z'){
+            if(b>='a' && b<='z' && b==a) return true;
+            if(b>='A' && b<='Z' && b-'A'==a-'a') return true;
+        }
+        else if(a>='A' && a<='Z'){
+            if(b>='a' && b<='z' && b-'a'==a-'A') return true;
+            if(b>='A' && b<='Z' && b==a) return true;  
+        }
+        else if(b>='a' && b<='z'){
+            if(a>='a' && a<='z' && b==a) return true;
+            if(a>='A' && a<='Z' && a-'A'==b-'a') return true;
+        }
+        else if(b>='A' && b<='Z'){
+            if(a>='a' && a<='z' && b-'A'==a-'a') return true;
+            if(a>='A' && a<='Z' && a==b) return true;
+        }
+        
+        return false;
+    }
+    
+    int sameChar(string A, string B)
+    {
+        int n = A.length();
+        int result = 0;
+        
+        for(int i=0; i<n; i++){
+            
+            if(equal(A[i], B[i])) result++;
+        }
+        
+        return result;
+    }
+};
