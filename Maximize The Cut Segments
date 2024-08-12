@@ -1,0 +1,55 @@
+class Solution
+{
+    public:
+    //Function to find the maximum number of cuts.
+    int solve(int length, int x, int y, int z, vector<int> &dp){
+        //base case
+        if(length==0) return 0;
+        if(length < 0) return INT_MIN;
+        
+        if(dp[length]!=-1) return dp[length];
+        
+        int x_segments = solve(length-x, x, y, z, dp) + 1;
+        int y_segments = solve(length-y, x, y, z, dp) + 1;
+        int z_segments = solve(length-z, x, y, z, dp) + 1;
+        
+        return dp[length] =  max(x_segments, max(y_segments, z_segments));
+    }
+    int maximizeTheCuts(int n, int x, int y, int z)
+    {
+        vector<int> dp(n+1,-1);
+        int ans = solve(n, x, y, z, dp);
+        if(ans < 0) return 0;
+        return ans;
+    }
+};
+
+
+class Solution
+{
+    int maximizeTheCuts(int n, int x, int y, int z)
+    {
+        vector<int> dp(n+1,0);
+        dp[0] = 0;
+        
+        for(int length=1; length<=n; length++){
+            
+            int xs = INT_MIN, ys = INT_MIN, zs = INT_MIN;
+            
+            if(length-x >= 0){
+                xs = 1 +  dp[length-x];
+            }
+            if(length-y >= 0){
+                ys = 1 + dp[length-y];
+            }
+            if(length-z >= 0){
+                zs = 1 + dp[length-z];
+            }
+            
+            dp[length] = max(xs, max(ys,zs));
+        }
+        
+        if(dp[n] < 0) return 0;
+        return dp[n];
+    }
+};
