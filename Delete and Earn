@@ -1,0 +1,54 @@
+class Solution {
+public:
+    
+    int solve(int index, vector<int> &nums, int last, map<int,int> &mp, vector<vector<int>> &dp){
+        if(index==-1) return 0;
+
+        if(dp[index][last]!=-1) return dp[index][last];
+
+        int take = INT_MIN;
+        if(nums[index] < last-1){
+            take = nums[index]*mp[nums[index]] + solve(index-1, nums, nums[index], mp, dp);
+        }
+
+        int ntake = solve(index-1, nums, last, mp, dp);
+
+        return dp[index][last] = max(take, ntake);
+    }
+    
+    int deleteAndEarn(vector<int>& nums) {
+        map<int,int> mp;
+
+        for(auto it : nums){
+            mp[it]++;
+        }
+
+        vector<int> arr;
+        for(auto it: mp) arr.push_back(it.first);
+        int maxi = arr.back(), n = arr.size();
+        vector<vector<int>> dp(n+1, vector<int>(maxi+3, 0));
+
+        //return solve(n-1, arr, maxi+2, mp, dp);
+
+        for(int last=arr[0]; last<=maxi+2; last++){
+            if(arr[0] < last-1){
+                dp[0][last] = arr[0]*mp[arr[0]];
+            }
+        }
+
+        for(int index=1; index<n; index++){
+            for(int last=arr[0]; last<=maxi+2; last++){
+                int take = INT_MIN;
+                if(arr[index] < last-1){
+                    take = arr[index]*mp[arr[index]] + dp[index-1][arr[index]];
+                }
+
+                int ntake = dp[index-1][last];
+
+                dp[index][last] = max(take, ntake);
+            }
+        }
+
+        return dp[n-1][maxi+2];
+    }
+};
