@@ -1,0 +1,62 @@
+class Solution {
+public:
+    int solve(int index, vector<int> &arr, int target, vector<vector<int>> &dp){
+        //base case
+        if(index==0){
+            if(target==0) return 0;
+            else if(target%arr[0]==0) return target/arr[0];
+            else return 1e9;
+        }
+
+        if(dp[index][target] != -1) return dp[index][target];
+
+        //not take
+        int ntake = solve(index-1, arr, target, dp) + 0;
+
+        //take
+        int take = INT_MAX;
+        if(arr[index]<=target){
+            take = solve(index, arr, target-arr[index], dp) + 1;
+        }
+
+        return dp[index][target] = min(ntake, take);
+    }
+    int coinChange(vector<int>& coins, int amount) {
+        int n = coins.size();
+        vector<vector<int>> dp(n, vector<int>(amount+1, 0));
+        //int result = solve(n-1, coins, amount, dp);
+        //if(result==1e9) return -1;
+        //return result;
+        if(amount==0) return 0;
+
+        if(coins[0]<=amount){
+            for(int i=1; i<amount+1; i++){
+                if(i%coins[0]!=0){
+                    dp[0][i] = 1e9;
+                    continue;
+                }
+
+                dp[0][i] = i/coins[0];
+            }
+        }
+        else for(int i=1; i<amount+1; i++) dp[0][i] = 1e9;
+
+        for(int index=1; index<n; index++){
+            for(int target=0; target<amount+1; target++){
+                //not take
+                int ntake = dp[index-1][target] + 0;
+
+                //take
+                int take = INT_MAX;
+                if(coins[index]<=target){
+                    take = dp[index][target-coins[index]] + 1;
+                }
+
+                dp[index][target] = min(ntake, take);
+            }
+        }
+
+        if(dp[n-1][amount]==1e9) return -1;
+        return dp[n-1][amount];
+    }
+};
