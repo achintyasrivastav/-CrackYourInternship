@@ -2,6 +2,8 @@ class Solution {
 public:
     //buy == 1 kharido
     //buy == 0 becho
+
+    //memoization
     int solve(int index, vector<int> &prices, int buy,  vector<vector<int>> &dp){
 
         if(index==prices.size()) return 0;
@@ -55,3 +57,71 @@ int maxProfit(vector<int>& prices) {
     return dp[0][1];
 }
 
+//space optimization
+int maxProfit(vector<int>& prices) {
+    int n = prices.size();
+
+    //vector<vector<int>> dp(n+1, vector<int>(2,0));
+    //return solve(0, prices, 1, dp);
+
+    vector<int> dp(2,0);
+
+    for(int index=n-1; index>=0; index--){
+
+        vector<int> temp(2,0);
+
+        for(int buy=0; buy<=1; buy++){
+
+            int profit = 0;
+
+            if(buy){
+                profit = max(dp[1], 0-prices[index] + dp[0]);
+            }
+            else{
+                profit = max(dp[0], prices[index] + dp[1]);
+            }
+
+            temp[buy] = profit;
+
+        }
+
+        dp = temp;
+    }
+
+    return dp[1];
+}
+
+//space-space-optimization
+int maxProfit(vector<int>& prices) {
+    int n = prices.size();
+
+    //vector<vector<int>> dp(n+1, vector<int>(2,0));
+    //return solve(0, prices, 1, dp);
+
+   int next_nbuy = 0, next_buy = 0;
+
+    for(int index=n-1; index>=0; index--){
+
+        int curr_nbuy = 0, curr_buy = 0;
+
+        for(int buy=0; buy<=1; buy++){
+
+            int profit = 0;
+
+            if(buy){
+                profit = max(next_buy, 0-prices[index] + next_nbuy);
+                curr_buy = profit;
+            }
+            else{
+                profit = max(next_nbuy, prices[index] + next_buy);
+                curr_nbuy = profit;
+            }
+
+        }
+
+        next_buy = curr_buy;
+        next_nbuy = curr_nbuy;
+    }
+
+    return next_buy;
+}
