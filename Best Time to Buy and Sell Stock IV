@@ -1,0 +1,74 @@
+class Solution {
+public:
+    int solve(int index, int buy, int count, vector<int> &prices, vector<vector<vector<int>>> &dp, int k){
+        //base case
+        if(count==k || index==prices.size()){
+            if(buy) return 0;
+            return -1e9;
+        }
+        if(dp[index][buy][count]!=-1) return dp[index][buy][count];
+
+        int profit = 0;
+        if(buy){
+            int pick = -prices[index] + solve(index+1, !buy, count, prices, dp, k);
+            int npick = solve(index+1, buy, count, prices, dp, k);
+
+            profit = max(pick, npick);
+        }
+        else{
+            int pick = prices[index] + solve(index+1, !buy, count+1, prices, dp, k);
+            int npick = solve(index+1, buy, count, prices, dp, k);
+
+            profit = max(pick, npick);
+        }
+
+        return dp[index][buy][count] = profit;
+    }
+    int maxProfit(int k, vector<int>& prices) {
+        int n = prices.size();
+        //vector<vector<vector<int>>> dp(n+1, vector<vector<int>>(2, vector<int>(k+1,0)));
+        //return solve(0, 1, 0, prices, dp, k);
+
+        vector<vector<int>> dp(2, vector<int>(k+1,0));
+
+        dp[0][k] = -1e9;
+
+        for(int count=k; count>=0; count--){
+            dp[0][count] = -1e9;
+        }
+
+        for(int index=n-1; index >= 0; index--){
+
+            vector<vector<int>> temp(2, vector<int>(k+1,0));
+
+            temp[0][k] = -1e9;
+
+            for(int buy=1; buy>=0; buy--){
+
+                for(int count=k-1; count>=0; count--){
+
+                    int profit = 0;
+                    if(buy){
+                        int pick = -prices[index] + dp[1-buy][count];
+                        int npick = dp[buy][count];
+
+                        profit = max(pick, npick);
+                    }
+                    else{
+                        int pick = prices[index] + dp[1-buy][count+1];
+                        int npick = dp[buy][count];
+
+                        profit = max(pick, npick);
+                    }
+
+                    temp[buy][count] = profit;
+
+                }
+            }
+
+            dp = temp;
+        }
+
+        return dp[1][0];
+    }
+};
